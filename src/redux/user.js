@@ -142,7 +142,7 @@ const signIn = (userObj) => dispatch => {
         })
 }
 
-const signUp = (userObj) => dispatch => {
+const signUp = (userObj, referalCode) => dispatch => {
     dispatch({
         type: SIGN_UP
     })
@@ -151,7 +151,8 @@ const signUp = (userObj) => dispatch => {
         url: 'http://localhost:3001/api/auth/register',
         data: {
             email: userObj.email,
-            password: userObj.password
+            password: userObj.password,
+            referalCode,
         }
     })
         .then(function (response) {

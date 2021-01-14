@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Redirect, Link as RouterLink } from 'react-router-dom'
+import { Redirect, Link as RouterLink, useLocation } from 'react-router-dom'
 
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
@@ -31,6 +31,10 @@ function Copyright() {
     )
 }
 
+function useQuery() {
+    return new URLSearchParams(useLocation().search);
+}
+
 const useStyles = makeStyles(theme => ({
     paper: {
         marginTop: theme.spacing(8),
@@ -57,12 +61,13 @@ export default function SignUp() {
     const isSignupError = signupError ? true : false
     const classes = useStyles()
     const dispatch = useDispatch()
-
+    const query = useQuery();
 
     const [values, setValues] = React.useState({
         email: '',
         password: ''
     })
+    const [referalCode, setReferalCode] = React.useState(null)
 
 
     const handleOnChange = (value, name) => {
@@ -71,6 +76,7 @@ export default function SignUp() {
 
     useEffect(() => {
         dispatch(actions.logOut()) //reset state and clear any errors
+        setReferalCode(query.get('referalCode'))
     }, [dispatch])
 
     if (isLoggedIn) return <Redirect to="/Home" />
@@ -84,7 +90,7 @@ export default function SignUp() {
                 </Avatar>
                 <Typography component="h1" variant="h5">
                     Sign up
-        </Typography>
+                </Typography>
                 <form className={classes.form} noValidate>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
@@ -151,7 +157,7 @@ export default function SignUp() {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={() => dispatch(actions.signUp(values))}
+                        onClick={() => dispatch(actions.signUp(values, referalCode))}
                     >
                         Sign Up
                     </Button>
